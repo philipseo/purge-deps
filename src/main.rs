@@ -16,8 +16,8 @@ fn print_help() {
     println!("Options:");
     println!("  -h or help                  Show this help message.");
     println!("  -p or path <path>           Specify the path to delete files and folders.");
-    println!("  -e or extends <targets>     Add to the list of targets to delete.");
-    println!("  -o or overwrite <list>      Replace the list of targets to delete.");
+    println!("  -e or extends <targets>     Add to the targets to delete.");
+    println!("  -o or overwrite <targets>   Replace the targets to delete.");
 }
 
 fn parse_targets(input: &str) -> Vec<String> {
@@ -109,7 +109,7 @@ fn main() {
                     set_extends = true;
                     i += 1;
                 } else {
-                    eprintln!("Error: You must specify a list after 'extends'.");
+                    eprintln!("Error: You must specify a targets after 'extends'.");
                 }
             }
             "overwrite" | "-o" => {
@@ -124,7 +124,7 @@ fn main() {
                     set_overwrite = true;
                     i += 1;
                 } else {
-                    eprintln!("Error: You must specify a list after 'overwrite'.");
+                    eprintln!("Error: You must specify a targets after 'overwrite'.");
                     return;
                 }
             }
