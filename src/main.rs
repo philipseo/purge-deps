@@ -50,13 +50,13 @@ fn recursive_delete_files_and_folders<P: AsRef<Path>>(
 
             if TARGETS.read().unwrap().contains(&file_name.to_string()) {
                 if is_file {
-                    println!("Deleting file: {:?}", file_name);
+                    println!("Deleting file: {:?}", entry_path);
                     fs::remove_file(&entry_path).map_err(|err| {
                         eprintln!("Error deleting file {:?}: {}", entry_path, err);
                         err
                     })?;
                 } else if is_dir {
-                    println!("Deleting folder: {:?}", file_name);
+                    println!("Deleting folder: {:?}", entry_path);
                     fs::remove_dir_all(&entry_path).map_err(|err| {
                         eprintln!("Error Deleting folder {:?}: {}", entry_path, err);
                         err
