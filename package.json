@@ -1,6 +1,6 @@
 {
   "name": "purge-deps",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A tool to delete dependency-related files and folders in JavaScript monorepo projects.",
   "author": "philipseo",
   "license": "MIT",
