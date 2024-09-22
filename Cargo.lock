@@ -10,7 +10,7 @@ checksum = "3fdb12b2476b595f9358c5161aa467c2438859caa136dec86c26fdd2efe17b92"
 
 [[package]]
 name = "purge-deps"
-version = "1.0.2"
+version = "1.0.3"
 dependencies = [
  "once_cell",
 ]
