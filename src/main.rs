@@ -62,10 +62,10 @@ fn recursive_delete_files_and_folders<P: AsRef<Path>>(
                         err
                     })?;
                 }
-            }
-
-            if is_dir {
-                recursive_delete_files_and_folders(&entry_path)?;
+            } else {
+                if is_dir {
+                    recursive_delete_files_and_folders(&entry_path)?;
+                }
             }
         } else {
             eprintln!("Error: Invalid file name for entry: {:?}", entry_path);
