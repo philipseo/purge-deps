@@ -20,7 +20,7 @@ npm install -g purge-deps
 You can run the tool using:
 
 ```bash
-npx purge
+npx purge-deps
 ```
 
 ## Options
