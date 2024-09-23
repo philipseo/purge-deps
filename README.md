@@ -34,7 +34,7 @@ npx purge-deps
 ## Default Targets
 The default targets include:
 
-- node-modules
+- node_modules
 - pnpm-lock.yaml
 - yarn.lock
 - package-lock.json
