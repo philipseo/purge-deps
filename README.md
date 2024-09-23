@@ -43,5 +43,5 @@ The default targets include:
 To use purge-deps:
 
 ```bash
-npx purge-deps -p /path/to/your/project -e additional-file.txt
+npx purge-deps -p /path/to/your/project -e additional-file.txt,packages
 ```
