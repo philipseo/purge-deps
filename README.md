@@ -24,11 +24,12 @@ npx purge
 ```
 
 ## Options
-
-- -h, help: Show help information.
-- -p, path <path>: Specify the path to delete files and folders. Default is the current directory (.).
-- -e, extends <targets>: Add to the list of targets to delete.
-- -o, overwrite <targets>: Replace the list of targets to delete.
+```bash
+-h, help: Show help information.
+-p, path <path>: Specify the path to delete files and folders. Default is the current directory (.).
+-e, extends <targets>: Add to the list of targets to delete.
+-o, overwrite <targets>: Replace the list of targets to delete.
+```
 
 ## Default Targets
 The default targets include:
@@ -43,5 +44,5 @@ The default targets include:
 To use purge-deps:
 
 ```bash
-npx purge-deps -p /path/to/your/project -e additional-file.txt,packages
+npx purge-deps -p /path/to/your/project -e target,Cargo.lock
 ```
