@@ -19,5 +19,8 @@
   },
   "scripts": {
     "release": "cargo build --release && cp ./target/release/purge-deps ./bin"
+  },
+  "devDependencies": {
+    "@changesets/cli": "2.27.8"
   }
 }
