@@ -1,7 +1,11 @@
 [package]
 name = "purge-deps"
-version = "1.0.4"
+version = "0.0.0"
 edition = "2021"
+description = "A tool to delete dependency-related files and folders in JavaScript monorepo projects."
+license = "MIT"
+keywords = ["purge", "dependencies", "javascript", "monorepo"]
+authors = ["philipseo <hbnb7894@gmail.com">]
 
 [dependencies]
 once_cell = "1.19.0"
