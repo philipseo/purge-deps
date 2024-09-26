@@ -45,7 +45,7 @@ fn parse_targets(input: &str) -> Vec<String> {
 }
 
 fn should_ignore(folder_name: &str) -> bool {
-    IGNORE.read().unwrap().contains(&folder_name.to_string())
+    IGNORE.read().unwrap().iter().any(|s| s == folder_name)
 }
 
 fn load_gitignore<P: AsRef<Path>>(path: P) -> Result<(), io::Error> {
