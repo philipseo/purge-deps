@@ -15,7 +15,19 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
 
+      - name: Setup Rust ToolChain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+
+      - name: Install PNPM Dependencies
+        uses: philipseo/actions/actions/install-pnpm-dependencies@main
+
+      - name: Build
+        uses: pnpm build:release
+
       - name: Create Release Pull Request
+        id: changesets
         uses: changesets/action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}

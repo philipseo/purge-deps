@@ -1,13 +1,23 @@
 {
   "name": "purge-deps",
   "version": "1.0.4",
+  "engines": {
+    "node": "20.x",
+    "pnpm": "8.x"
+  },
+  "packageManager": "pnpm@8.15.9",
   "description": "A tool to delete dependency-related files and folders in JavaScript monorepo projects.",
-  "author": "philipseo",
+  "author": "philipseo <hbnb7894@gmail.com",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/philipseo/purge-deps.git"
   },
+  "bugs": {
+    "url": "https://github.com/philipseo/purge-deps/issues",
+    "email": "hbnb7894@gmail.com"
+  },
+  "homepage": "https://github.com/philipseo/purge-deps#readme",
   "keywords": [
     "purge",
     "dependencies",
@@ -18,9 +28,7 @@
     "purge-deps": "./bin/purge-deps"
   },
   "scripts": {
-    "release": "cargo build --release && cp ./target/release/purge-deps ./bin"
-  },
-  "devDependencies": {
-    "@changesets/cli": "2.27.8"
+    "build": "cargo build",
+    "build:release": "cargo build --release && cp ./target/release/purge-deps ./bin"
   }
 }
