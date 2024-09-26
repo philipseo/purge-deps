@@ -23,7 +23,7 @@ npx purge-deps [options]
 -t or targets <targets>: Replaces the targets to delete. Multiple targets can be separated by commas. Default: ["node_modules", "pnpm-lock.yaml", "yarn.lock", "package-lock.json"]
 -e or extends <targets>: Adds to the targets to delete. Multiple targets can be separated by commas. Default: none
 -i or ignore <folders>: Specifies folders to ignore. Multiple folders can be separated by commas. Default: [".changeset", ".husky", ".git", ".github", "src"]
--g or gitignore <true|false>: Enables or disables reading from the .gitignore file. Default: true
+-gi or gitignore <true|false>: Enables or disables reading from the .gitignore file. Default: true
 ```
 
 ## Default Targets
@@ -53,5 +53,5 @@ npx purge-deps -e "test1.txt,test2.txt,dist"
 npx purge-deps -i "node_modules,build"
 
 # Disable usage of the .gitignore file
-npx purge-deps -g false
+npx purge-deps -gi false
 ```

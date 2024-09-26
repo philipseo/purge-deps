@@ -176,13 +176,14 @@ fn main() {
                     return;
                 }
             }
-            "gitignore" | "-g" => {
+            "gitignore" | "-gi" => {
                 if i + 1 < args.len() {
                     let value = args[i + 1].to_lowercase();
                     
                     if value == "false" {
                         *USE_GITIGNORE.write().unwrap() = false;
                     }
+                    i += 1;
                 }
             }
             _ => {
@@ -201,6 +202,7 @@ fn main() {
     println!("Path: {}", path);
     println!("Targets: {:?}", *TARGETS.read().unwrap());
     println!("Ignore>: {:?}", *IGNORE.read().unwrap());
+    println!("USE_GITIGNORE: {:?}", *USE_GITIGNORE.read().unwrap());
 
     if let Err(err) = recursive_delete_files_and_folders(path) {
         eprintln!("Error: {}", err);
