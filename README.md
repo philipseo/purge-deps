@@ -19,7 +19,7 @@ npx purge-deps [options]
 ## Options
 ```bash
 -h or help: Displays the usage information.
--p or path <path>: Specifies the path to delete files and folders. Default: .
+-p or path <path>: Specifies the path to delete files and folders.
 -t or targets <targets>: Replaces the targets to delete. Multiple targets can be separated by commas.
 -e or extends <targets>: Adds to the targets to delete. Multiple targets can be separated by commas.
 -i or ignore <folders>: Specifies folders to ignore. Multiple folders can be separated by commas.
