@@ -1,6 +1,6 @@
 {
   "name": "purge-deps",
-  "version": "1.1.4",
+  "version": "1.1.8",
   "engines": {
     "node": "20.x",
     "pnpm": "9.x"
@@ -24,14 +24,12 @@
     "javascript",
     "monorepo"
   ],
-  "files": [
-    "bin"
-  ],
   "bin": {
     "purge-deps": "./bin/purge-deps"
   },
   "scripts": {
     "build": "cargo build",
-    "build:release": "cargo build --release && cp ./target/release/purge-deps ./bin"
+    "build:release": "cargo build --release && cp ./target/release/purge-deps ./bin",
+    "release": "pnpm build:release && npm publish"
   }
 }

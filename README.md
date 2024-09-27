@@ -20,19 +20,20 @@ npx purge-deps [options]
 ```bash
 -h or help: Displays the usage information.
 -p or path <path>: Specifies the path to delete files and folders. Default: .
--t or targets <targets>: Replaces the targets to delete. Multiple targets can be separated by commas. Default: ["node_modules", "pnpm-lock.yaml", "yarn.lock", "package-lock.json"]
--e or extends <targets>: Adds to the targets to delete. Multiple targets can be separated by commas. Default: none
--i or ignore <folders>: Specifies folders to ignore. Multiple folders can be separated by commas. Default: [".changeset", ".husky", ".git", ".github", "src"]
--gi or gitignore <true|false>: Enables or disables reading from the .gitignore file. Default: true
+-t or targets <targets>: Replaces the targets to delete. Multiple targets can be separated by commas.
+-e or extends <targets>: Adds to the targets to delete. Multiple targets can be separated by commas.
+-i or ignore <folders>: Specifies folders to ignore. Multiple folders can be separated by commas.
+-gi or gitignore <true|false>: Enables or disables reading from the .gitignore file.
 ```
 
-## Default Targets
-The default targets include:
+## Default Values
+| Option                    | Default Value                                                         |
+|----------------------------|----------------------------------------------------------------------|
+| `path`                     | `.` (current directory)                                              |
+| `targets`                  | `node_modules, pnpm-lock.yaml, yarn.lock, package-lock.json`         |
+| `ignore`                   | `.changeset, .git, .github, .husky, .turbo, src,`                    |
+| `gitignore`                | `true`                                                               |
 
-- node_modules
-- pnpm-lock.yaml
-- yarn.lock
-- package-lock.json
 
 ## Examples
 

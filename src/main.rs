@@ -13,9 +13,10 @@ static TARGETS: Lazy<RwLock<Vec<String>>> = Lazy::new(|| RwLock::new(vec![
 ]));
 static IGNORE: Lazy<RwLock<Vec<String>>> = Lazy::new(|| RwLock::new(vec![
     ".changeset".to_string(),
-    ".husky".to_string(),
     ".git".to_string(),
     ".github".to_string(),
+    ".husky".to_string(),
+    ".turbo".to_string(),
     "src".to_string(),
 ]));
 static USE_GITIGNORE: Lazy<RwLock<bool>> = Lazy::new(|| RwLock::new(true));
@@ -199,9 +200,9 @@ fn main() {
         load_gitignore(gitignore_path).ok();
     }
 
-    println!("Path: {}", path);
-    println!("Targets: {:?}", *TARGETS.read().unwrap());
-    println!("Ignore>: {:?}", *IGNORE.read().unwrap());
+    println!("PATH: {}", path);
+    println!("TARGETS: {:?}", *TARGETS.read().unwrap());
+    println!("IGNORE: {:?}", *IGNORE.read().unwrap());
     println!("USE_GITIGNORE: {:?}", *USE_GITIGNORE.read().unwrap());
 
     if let Err(err) = recursive_delete_files_and_folders(path) {
