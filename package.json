@@ -5,7 +5,7 @@
     "node": "20.x",
     "pnpm": "9.x"
   },
-  "packageManager": "pnpm@9.11.0",
+  "packageManager": "pnpm@9.12.1",
   "description": "A tool to delete dependency-related files and folders in JavaScript monorepo projects.",
   "author": "philipseo <hbnb7894@gmail.com>",
   "license": "MIT",
