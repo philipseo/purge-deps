@@ -3,9 +3,9 @@
   "version": "1.1.9",
   "engines": {
     "node": "22.x",
-    "pnpm": "9.x"
+    "pnpm": "10.x"
   },
-  "packageManager": "pnpm@9.12.1",
+  "packageManager": "pnpm@10.12.4",
   "description": "A tool to delete dependency-related files and folders in JavaScript monorepo projects.",
   "author": "philipseo <hbnb7894@gmail.com>",
   "license": "MIT",
