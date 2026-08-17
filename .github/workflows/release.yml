@@ -8,62 +8,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  prepare:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    outputs:
-      version: ${{ steps.meta.outputs.version }}
-    steps:
-      - name: Check out repo
-        uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v6
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v7
-        with:
-          node-version: 24
-          package-manager-cache: false
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Ensure pending changesets
-        run: |
-          shopt -s nullglob
-          pending=()
-          for file in .changeset/*.md; do
-            [[ "$(basename "$file")" == "README.md" ]] && continue
-            pending+=("$file")
-          done
-          if [ ${#pending[@]} -eq 0 ]; then
-            echo "No pending changesets. Add one with: pnpm changeset"
-            exit 1
-          fi
-          echo "Pending changesets:"
-          printf '%s\n' "${pending[@]}"
-
-      - name: Version packages
-        run: pnpm run version
-
-      - name: Record version
-        id: meta
-        run: echo "version=$(npm pkg get version | tr -d '"')" >> "$GITHUB_OUTPUT"
-
-      - name: Upload versioned files
-        uses: actions/upload-artifact@v4
-        with:
-          name: version-files
-          path: |
-            package.json
-            .changeset
-
   build:
-    needs: prepare
     strategy:
       fail-fast: true
       matrix:
@@ -83,96 +28,80 @@ jobs:
           - os: windows-latest
             target: x86_64-pc-windows-msvc
             asset: win32-x64
-            windows: true
     runs-on: ${{ matrix.os }}
-    permissions:
-      contents: read
     steps:
-      - name: Check out repo
-        uses: actions/checkout@v7
+      - uses: actions/checkout@v7
 
-      - name: Download versioned files
-        uses: actions/download-artifact@v4
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v7
         with:
-          name: version-files
-          path: version-files
+          node-version: 24
+          package-manager-cache: false
 
-      - name: Apply versioned package.json
+      - run: pnpm install --frozen-lockfile
+
+      - name: Require pending changeset
         shell: bash
-        run: cp version-files/package.json package.json
+        run: |
+          shopt -s nullglob
+          pending=()
+          for file in .changeset/*.md; do
+            [[ "$(basename "$file")" == "README.md" ]] && continue
+            pending+=("$file")
+          done
+          if [ ${#pending[@]} -eq 0 ]; then
+            echo "No pending changesets. Add one with: pnpm changeset"
+            exit 1
+          fi
 
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
+      # package.json version is compiled into --version by build.rs
+      - run: pnpm run version
+        shell: bash
+
+      - uses: dtolnay/rust-toolchain@stable
         with:
           targets: ${{ matrix.target }}
 
-      - name: Build
-        run: cargo build --release --target ${{ matrix.target }}
-
-      - name: Stage binary
-        shell: bash
-        run: |
-          mkdir -p "dist/${{ matrix.asset }}"
-          if [ "${{ matrix.windows }}" = "true" ]; then
-            cp "target/${{ matrix.target }}/release/purge-deps.exe" "dist/${{ matrix.asset }}/purge-deps.exe"
-          else
-            cp "target/${{ matrix.target }}/release/purge-deps" "dist/${{ matrix.asset }}/purge-deps"
-            chmod +x "dist/${{ matrix.asset }}/purge-deps"
-          fi
+      - run: cargo build --release --target ${{ matrix.target }}
 
       - name: Upload binary
-        uses: actions/upload-artifact@v4
+        shell: bash
+        run: |
+          mkdir -p "out/${{ matrix.asset }}"
+          name=purge-deps
+          if [ "${{ matrix.os }}" = "windows-latest" ]; then
+            name=purge-deps.exe
+          fi
+          cp "target/${{ matrix.target }}/release/${name}" "out/${{ matrix.asset }}/${name}"
+
+      - uses: actions/upload-artifact@v4
         with:
-          name: binary-${{ matrix.asset }}
-          path: dist
+          name: ${{ matrix.asset }}
+          path: out
 
   publish:
-    needs: [prepare, build]
+    needs: build
     runs-on: ubuntu-latest
     environment: npm
     permissions:
       contents: write
       id-token: write
     steps:
-      - name: Check out repo
-        uses: actions/checkout@v7
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
-      - name: Download versioned files
-        uses: actions/download-artifact@v4
-        with:
-          name: version-files
-          path: version-files
+      - uses: pnpm/action-setup@v6
 
-      - name: Apply versioned files
-        run: |
-          cp version-files/package.json package.json
-          rm -rf .changeset
-          cp -R version-files/.changeset .changeset
-
-      - name: Download binaries
-        uses: actions/download-artifact@v4
-        with:
-          pattern: binary-*
-          path: bin
-          merge-multiple: true
-
-      - name: Make unix binaries executable
-        run: find bin -type f ! -name '*.exe' ! -name '*.js' -exec chmod +x {} +
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v6
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
           registry-url: https://registry.npmjs.org
           package-manager-cache: false
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run version
 
       - name: Commit version
         run: |
@@ -181,8 +110,26 @@ jobs:
           git add package.json .changeset
           git commit -m "Version packages"
 
-      - name: Publish
-        run: pnpm exec changeset publish
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: "*-*"
+          path: bin
+          merge-multiple: true
 
-      - name: Push version commit and tags
-        run: git push --follow-tags
+      - run: find bin -type f ! -name '*.exe' ! -name '*.js' -exec chmod +x {} +
+
+      - name: Verify platform binaries
+        run: |
+          for f in \
+            bin/linux-x64/purge-deps \
+            bin/linux-arm64/purge-deps \
+            bin/darwin-arm64/purge-deps \
+            bin/darwin-x64/purge-deps \
+            bin/win32-x64/purge-deps.exe \
+            bin/purge-deps.js
+          do
+            test -e "$f" || { echo "missing $f"; ls -R bin; exit 1; }
+          done
+
+      - run: pnpm release
+      - run: git push --follow-tags
