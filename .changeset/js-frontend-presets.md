@@ -11,3 +11,4 @@ Breaking notes:
 - `-i` extends the default ignore list. Use `--replace-ignore` to replace it.
 - Bun lockfiles (`bun.lock`, `bun.lockb`) are part of the `js` preset.
 - `.gitignore` uses globs from `{path}/.gitignore`. Target names are still deleted even when they appear in that file.
+- The npm package includes platform binaries (macOS, Linux, Windows) selected by a Node wrapper.

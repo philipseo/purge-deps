@@ -21,14 +21,19 @@
     "monorepo"
   ],
   "bin": {
-    "purge-deps": "./bin/purge-deps"
+    "purge-deps": "./bin/purge-deps.js"
   },
+  "files": [
+    "bin",
+    "LICENSE",
+    "README.md"
+  ],
   "scripts": {
     "build": "cargo build",
     "build:release": "cargo build --release && mkdir -p ./bin && cp ./target/release/purge-deps ./bin",
     "changeset": "changeset",
     "version": "changeset version",
-    "release": "pnpm build:release && changeset publish"
+    "release": "changeset publish"
   },
   "devDependencies": {
     "@changesets/cli": "^3.0.0"

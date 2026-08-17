@@ -4,6 +4,7 @@
 ### Rust ###
 target
 bin/purge-deps
+bin/*/
 
 ### Dependencies ###
 node_modules

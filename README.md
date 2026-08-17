@@ -8,7 +8,10 @@ Run `--dry-run` first if you want to see what would be removed.
 
 ```bash
 npm install -g purge-deps
+npx purge-deps --dry-run
 ```
+
+The npm package ships prebuilt binaries for macOS (arm64/x64), Linux (x64/arm64), and Windows (x64).
 
 ## Usage
 
