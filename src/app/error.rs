@@ -7,12 +7,6 @@ use std::path::PathBuf;
 /// error on `remove_dir_all` becomes [`Error::Delete`].
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
-    #[error("failed to read directory {path}: {source}")]
-    ReadDir {
-        path: PathBuf,
-        #[source]
-        source: io::Error,
-    },
     #[error("failed to walk directory: {0}")]
     Walk(String),
     #[error("failed to delete {path}: {source}")]
@@ -21,6 +15,4 @@ pub enum Error {
         #[source]
         source: io::Error,
     },
-    #[error(transparent)]
-    Io(#[from] io::Error),
 }

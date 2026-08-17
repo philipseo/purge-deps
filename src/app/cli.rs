@@ -23,7 +23,7 @@ const BARE_FLAGS: &[&str] = &[
 #[derive(Debug, Parser)]
 #[command(
     name = "purge-deps",
-    version,
+    version = env!("PURGE_DEPS_VERSION"),
     about = "Delete JavaScript dependency leftovers and frontend build caches",
     long_about = None,
     override_usage = "purge-deps [OPTIONS]",
@@ -83,12 +83,13 @@ pub struct Args {
         short = 'g',
         long = "gitignore",
         visible_alias = "gi",
-        default_value = "true",
+        default_value_t = true,
         default_missing_value = "true",
         num_args = 0..=1,
+        action = clap::ArgAction::Set,
         value_name = "true|false"
     )]
-    pub gitignore: String,
+    pub gitignore: bool,
 
     /// List matches without deleting them
     #[arg(long = "dry-run")]
@@ -136,7 +137,7 @@ impl From<Args> for Config {
             path: args.path,
             targets: Vec::new(),
             ignore: Config::default_ignore(),
-            use_gitignore: args.gitignore.to_lowercase() != "false",
+            use_gitignore: args.gitignore,
             dry_run: args.dry_run,
             presets: Vec::new(),
             extra_rules: Vec::new(),
@@ -270,6 +271,12 @@ mod tests {
     #[test]
     fn unknown_preset_is_rejected() {
         let result = Args::try_parse_from(normalize_args(["purge-deps", "--preset", "python"]));
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn gitignore_invalid_value_is_rejected() {
+        let result = Args::try_parse_from(normalize_args(["purge-deps", "--gitignore", "maybe"]));
         assert!(result.is_err());
     }
 

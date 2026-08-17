@@ -63,6 +63,9 @@ jobs:
           git add package.json .changeset
           git commit -m "Version packages"
 
+      - name: Test
+        run: cargo test
+
       - name: Build and publish
         run: pnpm release
 

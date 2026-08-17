@@ -67,15 +67,12 @@ fn file_name_eq(path: &Path, name: &str) -> bool {
 ///
 /// Example: `app/android/app/build` has suffix `["android", "app", "build"]`.
 fn path_has_suffix(path: &Path, suffix: &[&str]) -> bool {
-    let components: Vec<_> = path.iter().collect();
-    if suffix.len() > components.len() {
-        return false;
-    }
-    components
-        .iter()
-        .rev()
-        .zip(suffix.iter().rev())
-        .all(|(component, expected)| *component == OsStr::new(expected))
+    let mut path_iter = path.iter().rev();
+    suffix.iter().rev().all(|expected| {
+        path_iter
+            .next()
+            .is_some_and(|component| component == OsStr::new(*expected))
+    })
 }
 
 /// True when any path component is a native project folder (`android` or `ios`).

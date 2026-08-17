@@ -89,3 +89,82 @@ fn dry_run_lists_matches_without_deleting() {
     assert!(stdout.contains("PRESETS"));
     assert!(dir.path().join("node_modules").exists());
 }
+
+#[test]
+fn version_matches_package_json() {
+    let output = bin().arg("--version").output().expect("run --version");
+    assert!(output.status.success());
+
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    let expected = env!("PURGE_DEPS_VERSION");
+    assert!(stdout.contains(expected), "expected {expected} in {stdout}");
+
+    let package_json =
+        fs::read_to_string(PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("package.json"))
+            .expect("package.json");
+    assert!(
+        package_json.contains(&format!("\"version\": \"{expected}\"")),
+        "package.json should contain version {expected}"
+    );
+}
+
+#[test]
+fn preset_mobile_deletes_expo() {
+    let dir = tempdir().unwrap();
+    fs::create_dir(dir.path().join(".expo")).unwrap();
+
+    let output = bin()
+        .args([
+            "-p",
+            dir.path().to_str().unwrap(),
+            "--preset",
+            "js,frontend,mobile",
+            "-g",
+            "false",
+        ])
+        .output()
+        .expect("run --preset mobile");
+
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert!(!dir.path().join(".expo").exists());
+}
+
+#[test]
+fn extends_dist_deletes_every_dist() {
+    let dir = tempdir().unwrap();
+    let docs_dist = dir.path().join("docs").join("dist");
+    fs::create_dir_all(&docs_dist).unwrap();
+    fs::write(docs_dist.join("index.html"), "x").unwrap();
+
+    let output = bin()
+        .args([
+            "-p",
+            dir.path().to_str().unwrap(),
+            "-e",
+            "dist",
+            "-g",
+            "false",
+        ])
+        .output()
+        .expect("run -e dist");
+
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert!(!docs_dist.exists());
+}
+
+#[test]
+fn gitignore_invalid_value_fails() {
+    let output = bin()
+        .args(["--gitignore", "maybe"])
+        .output()
+        .expect("run --gitignore maybe");
+    assert!(!output.status.success());
+}

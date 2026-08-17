@@ -101,20 +101,6 @@ impl Config {
             .collect()
     }
 
-    /// Whether this file/folder name should be skipped entirely.
-    ///
-    /// Example: `should_ignore("src")` is true, so walk does not enter `src/`.
-    pub fn should_ignore(&self, name: &str) -> bool {
-        self.ignore.iter().any(|s| s == name)
-    }
-
-    /// Whether this file/folder name is a deletion target.
-    ///
-    /// Example: `is_target("node_modules")` is true for the default config.
-    pub fn is_target(&self, name: &str) -> bool {
-        self.targets.iter().any(|s| s == name)
-    }
-
     /// Append names to ignore unless they are already listed.
     ///
     /// Example: `-i vendor` keeps `.git` / `src` and adds `vendor`.

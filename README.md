@@ -34,6 +34,8 @@ With no flags, it walks the current directory using the `js` and `frontend` pres
 
 `-t` and `-e` cannot be combined. `-i` and `--replace-ignore` cannot be combined.
 
+`-t` and `-e` match basenames exactly. `-e dist` deletes every `dist` folder, including ones the `frontend` preset would leave alone (no `package.json`, or under `android/` / `ios/`).
+
 ## Presets
 
 | Preset     | Default | What it matches |

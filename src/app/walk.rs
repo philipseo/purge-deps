@@ -57,7 +57,6 @@ fn load_gitignore(config: &Config) -> Result<Gitignore, Error> {
 
     let gitignore_path = config.path.join(".gitignore");
     if !gitignore_path.is_file() {
-        println!(".gitignore file not found");
         return Ok(Gitignore::empty());
     }
 
@@ -133,12 +132,10 @@ fn classify_entry(
     found: &Mutex<Vec<Candidate>>,
 ) -> WalkState {
     let file_name = entry.file_name();
-    let is_dir = entry
-        .file_type()
-        .is_some_and(|file_type| file_type.is_dir());
-    let is_file = entry
-        .file_type()
-        .is_some_and(|file_type| file_type.is_file());
+    let file_type = entry.file_type();
+    let is_symlink = file_type.is_some_and(|file_type| file_type.is_symlink());
+    let is_dir = file_type.is_some_and(|file_type| file_type.is_dir()) && !is_symlink;
+    let is_file = file_type.is_some_and(|file_type| file_type.is_file());
 
     // Ignore wins over targets: a name in both lists is skipped, not deleted.
     if ignore.contains(file_name) {
@@ -154,7 +151,7 @@ fn classify_entry(
     let matched =
         targets.contains(file_name) || path_rules.iter().any(|rule| rule.matches(entry.path()));
     if matched {
-        if is_file || is_dir {
+        if is_file || is_dir || is_symlink {
             found.lock().expect("walk candidates").push(Candidate {
                 path: entry.path().to_path_buf(),
                 is_dir,
@@ -368,5 +365,24 @@ mod tests {
         purge(&config).unwrap();
 
         assert!(git.exists());
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn deletes_symlink_without_following() {
+        use std::os::unix::fs::symlink;
+
+        let dir = tempdir().unwrap();
+        let real = dir.path().join("real_modules");
+        fs::create_dir(&real).unwrap();
+        fs::write(real.join("pkg"), "keep").unwrap();
+        let link = dir.path().join("node_modules");
+        symlink(&real, &link).unwrap();
+
+        purge(&config_without_gitignore(dir.path())).unwrap();
+
+        assert!(link.symlink_metadata().is_err());
+        assert!(real.exists());
+        assert!(real.join("pkg").exists());
     }
 }
