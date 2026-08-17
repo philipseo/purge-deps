@@ -3,3 +3,6 @@ target
 .nvmrc
 Cargo.*
 renovate.json
+.changeset
+.github
+pnpm-lock.yaml

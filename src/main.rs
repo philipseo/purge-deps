@@ -2,16 +2,15 @@ use std::env;
 use std::fs;
 use std::io::{self, BufRead};
 use std::path::Path;
-use std::sync::RwLock;
-use once_cell::sync::Lazy;    
+use std::sync::{LazyLock, RwLock};
 
-static TARGETS: Lazy<RwLock<Vec<String>>> = Lazy::new(|| RwLock::new(vec![
+static TARGETS: LazyLock<RwLock<Vec<String>>> = LazyLock::new(|| RwLock::new(vec![
     "node_modules".to_string(),
     "pnpm-lock.yaml".to_string(),
     "yarn.lock".to_string(),
     "package-lock.json".to_string(),
 ]));
-static IGNORE: Lazy<RwLock<Vec<String>>> = Lazy::new(|| RwLock::new(vec![
+static IGNORE: LazyLock<RwLock<Vec<String>>> = LazyLock::new(|| RwLock::new(vec![
     ".changeset".to_string(),
     ".git".to_string(),
     ".github".to_string(),
@@ -19,7 +18,7 @@ static IGNORE: Lazy<RwLock<Vec<String>>> = Lazy::new(|| RwLock::new(vec![
     ".turbo".to_string(),
     "src".to_string(),
 ]));
-static USE_GITIGNORE: Lazy<RwLock<bool>> = Lazy::new(|| RwLock::new(true));
+static USE_GITIGNORE: LazyLock<RwLock<bool>> = LazyLock::new(|| RwLock::new(true));
 
 fn print_help() {
     println!("Usage: puge-deps [options]");

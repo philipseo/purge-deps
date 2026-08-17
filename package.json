@@ -5,7 +5,7 @@
     "node": "24.x",
     "pnpm": "10.x"
   },
-  "packageManager": "pnpm@10.30.1",
+  "packageManager": "pnpm@10.34.5",
   "description": "A tool to delete dependency-related files and folders in JavaScript monorepo projects.",
   "author": "philipseo <hbnb7894@gmail.com>",
   "license": "MIT",
@@ -29,7 +29,12 @@
   },
   "scripts": {
     "build": "cargo build",
-    "build:release": "cargo build --release && cp ./target/release/purge-deps ./bin",
-    "release": "pnpm build:release && npm publish"
+    "build:release": "cargo build --release && mkdir -p ./bin && cp ./target/release/purge-deps ./bin",
+    "changeset": "changeset",
+    "version": "changeset version",
+    "release": "pnpm build:release && changeset publish"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^3.0.0"
   }
 }

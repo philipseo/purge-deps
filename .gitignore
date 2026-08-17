@@ -3,6 +3,7 @@
 
 ### Rust ###
 target
+bin/purge-deps
 
 ### Dependencies ###
 node_modules
