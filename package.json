@@ -1,7 +1,7 @@
 {
   "name": "purge-deps",
   "version": "1.1.10",
-  "packageManager": "pnpm@11.21.0",
+  "packageManager": "pnpm@11.22.0",
   "description": "Delete JavaScript dependency leftovers and frontend build caches",
   "author": "philipseo <hbnb7894@gmail.com>",
   "license": "MIT",
