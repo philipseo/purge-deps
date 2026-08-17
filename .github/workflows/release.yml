@@ -139,6 +139,25 @@ jobs:
             exit 1
           }
 
+      - name: Verify tarball
+        run: |
+          # pnpm strips the executable bit from anything outside the bin field,
+          # so assert publishConfig.executableFiles actually took effect
+          pnpm pack --pack-destination /tmp >/dev/null
+          tar -tvzf /tmp/purge-deps-*.tgz > /tmp/tarball.txt
+          cat /tmp/tarball.txt
+          for f in \
+            linux-x64/purge-deps \
+            linux-arm64/purge-deps \
+            darwin-arm64/purge-deps \
+            darwin-x64/purge-deps
+          do
+            grep -q "^-rwx.*package/bin/${f}$" /tmp/tarball.txt || {
+              echo "not executable in tarball: bin/${f}"
+              exit 1
+            }
+          done
+
       - run: pnpm release
 
       - run: git push --follow-tags

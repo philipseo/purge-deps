@@ -28,6 +28,14 @@
     "LICENSE",
     "README.md"
   ],
+  "publishConfig": {
+    "executableFiles": [
+      "./bin/linux-x64/purge-deps",
+      "./bin/linux-arm64/purge-deps",
+      "./bin/darwin-arm64/purge-deps",
+      "./bin/darwin-x64/purge-deps"
+    ]
+  },
   "scripts": {
     "build": "cargo build",
     "build:release": "cargo build --release && mkdir -p ./bin && cp ./target/release/purge-deps ./bin",
