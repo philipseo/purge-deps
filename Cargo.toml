@@ -2,8 +2,16 @@
 name = "purge-deps"
 version = "0.0.0"
 edition = "2021"
-description = "A tool to delete dependency-related files and folders in JavaScript monorepo projects."
+description = "Delete JavaScript dependency leftovers and frontend build caches"
 license = "MIT"
 keywords = ["purge", "dependencies", "javascript", "monorepo"]
 authors = ["philipseo <hbnb7894@gmail.com>"]
 
+[dependencies]
+anyhow = "1"
+clap = { version = "4", features = ["derive"] }
+ignore = "0.4"
+thiserror = "2"
+
+[dev-dependencies]
+tempfile = "3"
