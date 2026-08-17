@@ -75,7 +75,7 @@ jobs:
           fi
           cp "target/${{ matrix.target }}/release/${name}" "out/${{ matrix.asset }}/${name}"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.asset }}
           path: out
@@ -110,7 +110,7 @@ jobs:
           git add package.json .changeset
           git commit -m "Version packages"
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           pattern: "*-*"
           path: bin
