@@ -1,5 +1,5 @@
 ---
-"purge-deps": minor
+"purge-deps": patch
 ---
 
 Default to `js` + `frontend` presets, add `--preset` / `--dry-run`, and treat `-i` as ignore extend.
