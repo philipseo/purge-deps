@@ -75,9 +75,9 @@ jobs:
           fi
           cp "target/${{ matrix.target }}/release/${name}" "out/${{ matrix.asset }}/${name}"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
-          name: ${{ matrix.asset }}
+          name: binary-${{ matrix.asset }}
           path: out
 
   publish:
@@ -109,10 +109,12 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add package.json .changeset
           git commit -m "Version packages"
+          # rebase before publish so the tag changeset creates stays reachable
+          git pull --rebase origin "${GITHUB_REF_NAME}"
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
-          pattern: "*-*"
+          pattern: binary-*
           path: bin
           merge-multiple: true
 
@@ -130,6 +132,13 @@ jobs:
           do
             test -e "$f" || { echo "missing $f"; ls -R bin; exit 1; }
           done
+          # each build job versions independently, so confirm they agree
+          version=$(npm pkg get version | tr -d '"')
+          bin/linux-x64/purge-deps --version | grep -qwF "$version" || {
+            echo "binary version mismatch: expected $version, got $(bin/linux-x64/purge-deps --version)"
+            exit 1
+          }
 
       - run: pnpm release
+
       - run: git push --follow-tags
